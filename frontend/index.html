@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Pro - Interactive Learning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--dark);
+        }
+
+        .btn-success:hover {
+            background: #3ab0d6;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e01a6f;
+            transform: translateY(-2px);
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #b8b8b8;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #b8b8b8;
+        }
+
+        .auth-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+
+        .quiz-setup {
+            max-width: 600px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quiz-setup h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            background: rgba(67, 97, 238, 0.2);
+        }
+
+        .category-card.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.3);
+        }
+
+        .difficulty-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .difficulty-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .difficulty-option:hover {
+            background: rgba(67, 97, 238, 0.2);
+        }
+
+        .difficulty-option.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.3);
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 40px 0;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quiz-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .quiz-info span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(67, 97, 238, 0.2);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.3);
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(76, 201, 240, 0.2);
+        }
+
+        .option.incorrect {
+            border-color: var(--danger);
+            background: rgba(247, 37, 133, 0.2);
+        }
+
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            font-weight: 700;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 40px 0;
+        }
+
+        .results-score {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 20px 0;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .result-card h3 {
+            margin-bottom: 10px;
+            color: var(--success);
+        }
+
+        .result-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b8b8b8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .quiz-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>QuizMaster Pro</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-screen="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-screen="quiz-setup">Quizzes</a></li>
+                    <li><a href="#" class="nav-link" data-screen="leaderboard">Leaderboard</a></li>
+                    <li><a href="#" class="nav-link" data-screen="profile">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="login-btn">Login</button>
+                <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+            </div>
+            <div class="user-profile" id="user-profile" style="display: none;">
+                <div class="avatar" id="user-avatar">JD</div>
+                <span id="username">John Doe</span>
+                <button class="btn btn-outline" id="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Home Screen -->
+        <div class="screen active" id="home-screen">
+            <section class="hero">
+                <h1>Challenge Your Mind</h1>
+                <p>Test your knowledge with our interactive quizzes. Choose from various categories, compete with friends, and track your progress.</p>
+                <button class="btn btn-primary btn-lg" id="get-started-btn">
+                    <i class="fas fa-rocket"></i> Get Started
+                </button>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Multiple Categories</h3>
+                    <p>Choose from technology, science, history, arts, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Compete & Win</h3>
+                    <p>Climb the leaderboard and earn badges for your achievements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your improvement with detailed analytics and reports.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Authentication Screens -->
+        <div class="screen" id="login-screen">
+            <div class="auth-container">
+                <h2>Welcome Back</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Don't have an account? <a href="#" id="go-to-signup">Sign up here</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="screen" id="signup-screen">
+            <div class="auth-container">
+                <h2>Create Account</h2>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Already have an account? <a href="#" id="go-to-login">Login here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Quiz Setup Screen -->
+        <div class="screen" id="quiz-setup-screen">
+            <div class="quiz-setup">
+                <h2>Choose Your Quiz</h2>
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <div class="category-grid">
+                        <div class="category-card selected" data-category="technology">
+                            <i class="fas fa-laptop-code" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <div>Technology</div>
+                        </div>
+                        <div class="category-card" data-category="science">
+                            <i class="fas fa-flask" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <div>Science</div>
+                        </div>
+                        <div class="category-card" data-category="history">
+                            <i class="fas fa-monument" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <div>History</div>
+                        </div>
+                        <div class="category-card" data-category="arts">
+                            <i class="fas fa-palette" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <div>Arts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Select Difficulty</label>
+                    <div class="difficulty-options">
+                        <div class="difficulty-option selected" data-difficulty="easy">Easy</div>
+                        <div class="difficulty-option" data-difficulty="medium">Medium</div>
+                        <div class="difficulty-option" data-difficulty="hard">Hard</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="question-count">Number of Questions</label>
+                    <select id="question-count" class="form-control">
+                        <option value="5">5 Questions</option>
+                        <option value="10" selected>10 Questions</option>
+                        <option value="15">15 Questions</option>
+                        <option value="20">20 Questions</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-block" id="start-quiz-btn">
+                    <i class="fas fa-play"></i> Start Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="screen" id="quiz-screen">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-info">
+                        <span id="question-counter">Question 1 of 10</span>
+                        <span id="score-counter">Score: 0</span>
+                    </div>
+                    <div class="timer" id="timer">05:00</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="quiz-progress" style="width: 10%;"></div>
+                </div>
+                <div class="question-container">
+                    <h2 class="question-text" id="question-text">What year was JavaScript launched?</h2>
+                    <div class="options-container" id="options-container">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="quiz-controls">
+                    <button class="btn btn-outline" id="prev-question-btn">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-primary" id="next-question-btn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-success" id="submit-quiz-btn" style="display: none;">
+                        <i class="fas fa-paper-plane"></i> Submit Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="results-screen">
+            <div class="results-container">
+                <h2>Quiz Completed!</h2>
+                <p>Here's how you performed:</p>
+                <div class="results-score" id="final-score">8/10</div>
+                <div class="results-details">
+                    <div class="result-card">
+                        <h3>Correct Answers</h3>
+                        <div class="value" id="correct-answers">8</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Wrong Answers</h3>
+                        <div class="value" id="wrong-answers">2</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Time Taken</h3>
+                        <div class="value" id="time-taken">04:30</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Your Score</h3>
+                        <div class="value" id="percentage-score">80%</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="review-answers-btn">
+                        <i class="fas fa-list-check"></i> Review Answers
+                    </button>
+                    <button class="btn btn-outline" id="new-quiz-btn">
+                        <i class="fas fa-plus"></i> Take Another Quiz
+                    </button>
+                    <button class="btn btn-success" id="leaderboard-btn">
+                        <i class="fas fa-trophy"></i> View Leaderboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div class="screen" id="profile-screen">
+            <div class="quiz-setup">
+                <h2>User Profile</h2>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-control" value="John Doe" id="profile-name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" value="john.doe@example.com" id="profile-email">
+                </div>
+                <div class="form-group">
+                    <label>Change Password</label>
+                    <input type="password" class="form-control" placeholder="Enter new password" id="profile-password">
+                </div>
+                <button class="btn btn-primary btn-block">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+
+            <div class="quiz-container" style="margin-top: 30px;">
+                <h2>Quiz History</h2>
+                <div id="quiz-history">
+                    <!-- Quiz history will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div class="screen" id="leaderboard-screen">
+            <div class="quiz-container">
+                <h2>Leaderboard</h2>
+                <div id="leaderboard-list">
+                    <!-- Leaderboard will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 QuizMaster Pro. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample quiz data
+        const quizData = {
+            technology: {
+                easy: [
+                    {
+                        question: "What does HTML stand for?",
+                        options: [
+                            "Hyper Text Markup Language",
+                            "High Tech Modern Language",
+                            "Hyper Transfer Markup Language",
+                            "Home Tool Markup Language"
+                        ],
+                        correct: 0
+                    },
+                    {
+                        question: "Which language runs in a web browser?",
+                        options: ["Java", "C", "Python", "JavaScript"],
+                        correct: 3
+                    },
+                    {
+                        question: "What does CSS stand for?",
+                        options: [
+                            "Creative Style Sheets",
+                            "Cascading Style Sheets",
+                            "Computer Style Sheets",
+                            "Colorful Style Sheets"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        question: "Which company developed JavaScript?",
+                        options: ["Microsoft", "Netscape", "Apple", "Google"],
+                        correct: 1
+                    },
+                    {
+                        question: "What year was JavaScript launched?",
+                        options: ["1996", "1995", "1994", "None of the above"],
+                        correct: 1
+                    }
+                ],
+                medium: [
+                    {
+                        question: "Which of these is a JavaScript framework?",
+                        options: ["Django", "Laravel", "React", "Spring"],
+                        correct: 2
+                    },
+                    {
+                        question: "What does API stand for?",
+                        options: [
+                            "Application Programming Interface",
+                            "Advanced Programming Interface",
+                            "Automated Programming Interface",
+                            "Application Process Integration"
+                        ],
+                        correct: 0
+                    },
+                    {
+                        question: "Which HTML tag is used for JavaScript code?",
+                        options: ["<javascript>", "<script>", "<js>", "<code>"],
+                        correct: 1
+                    },
+                    {
+                        question: "Which symbol is used for comments in JavaScript?",
+                        options: ["//", "<!-- -->", "**", "%%"],
+                        correct: 0
+                    },
+                    {
+                        question: "Which method is used to parse a JSON string?",
+                        options: [
+                            "JSON.parse()",
+                            "JSON.stringify()",
+                            "JSON.convert()",
+                            "JSON.decode()"
+                        ],
+                        correct: 0
+                    }
+                ],
+                hard: [
+                    {
+                        question: "What is the time complexity of binary search?",
+                        options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+                        correct: 1
+                    },
+                    {
+                        question: "Which is not a JavaScript data type?",
+                        options: ["undefined", "boolean", "integer", "symbol"],
+                        correct: 2
+                    },
+                    {
+                        question: "What does 'this' refer to in JavaScript?",
+                        options: [
+                            "The function itself",
+                            "The global object",
+                            "The object that the function is a property of",
+                            "The parent object"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        question: "Which is not a JavaScript framework?",
+                        options: ["Angular", "Vue", "React", "Django"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is the purpose of 'use strict' in JavaScript?",
+                        options: [
+                            "Enforces stricter type checking",
+                            "Enables modern JavaScript features",
+                            "Enforces stricter parsing and error handling",
+                            "Optimizes code performance"
+                        ],
+                        correct: 2
+                    }
+                ]
+            },
+            science: {
+                easy: [
+                    {
+                        question: "Which planet is known as the Red Planet?",
+                        options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is H2O more commonly known as?",
+                        options: ["Oxygen", "Hydrogen", "Water", "Carbon Dioxide"],
+                        correct: 2
+                    },
+                    {
+                        question: "How many bones are in the human body?",
+                        options: ["196", "206", "216", "226"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the closest star to Earth?",
+                        options: ["Proxima Centauri", "Sirius", "The Sun", "Alpha Centauri"],
+                        correct: 2
+                    },
+                    {
+                        question: "Which gas do plants absorb from the atmosphere?",
+                        options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+                        correct: 2
+                    }
+                ],
+                medium: [
+                    {
+                        question: "What is the chemical symbol for gold?",
+                        options: ["Go", "Gd", "Au", "Ag"],
+                        correct: 2
+                    },
+                    {
+                        question: "Which planet has the most moons?",
+                        options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the hardest natural substance on Earth?",
+                        options: ["Gold", "Iron", "Diamond", "Platinum"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the speed of light?",
+                        options: [
+                            "299,792,458 m/s",
+                            "300,000,000 m/s",
+                            "250,000,000 m/s",
+                            "350,000,000 m/s"
+                        ],
+                        correct: 0
+                    },
+                    {
+                        question: "Which element has the atomic number 1?",
+                        options: ["Helium", "Oxygen", "Hydrogen", "Lithium"],
+                        correct: 2
+                    }
+                ],
+                hard: [
+                    {
+                        question: "What is the study of mushrooms called?",
+                        options: ["Mycology", "Biology", "Botany", "Zoology"],
+                        correct: 0
+                    },
+                    {
+                        question: "Which particle has a positive charge?",
+                        options: ["Electron", "Neutron", "Proton", "Photon"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the most abundant gas in Earth's atmosphere?",
+                        options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Argon"],
+                        correct: 2
+                    },
+                    {
+                        question: "Which blood type is the universal donor?",
+                        options: ["A", "B", "AB", "O"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is the unit of electrical resistance?",
+                        options: ["Volt", "Ampere", "Ohm", "Watt"],
+                        correct: 2
+                    }
+                ]
+            }
+        };
+
+        // Application state
+        const state = {
+            currentUser: null,
+            currentScreen: 'home',
+            currentQuiz: {
+                category: 'technology',
+                difficulty: 'easy',
+                questions: [],
+                currentQuestionIndex: 0,
+                userAnswers: [],
+                score: 0,
+                startTime: null,
+                timer: null,
+                timeLeft: 300 // 5 minutes in seconds
+            }
+        };
+
+        // DOM Elements
+        const screens = document.querySelectorAll('.screen');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const authButtons = document.querySelector('.auth-buttons');
+        const userProfile = document.getElementById('user-profile');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const prevQuestionBtn = document.getElementById('prev-question-btn');
+        const submitQuizBtn = document.getElementById('submit-quiz-btn');
+        const newQuizBtn = document.getElementById('new-quiz-btn');
+        const reviewAnswersBtn = document.getElementById('review-answers-btn');
+        const leaderboardBtn = document.getElementById('leaderboard-btn');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const goToSignup = document.getElementById('go-to-signup');
+        const goToLogin = document.getElementById('go-to-login');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const difficultyOptions = document.querySelectorAll('.difficulty-option');
+
+        // Initialize the application
+        function init() {
+            // Check if user is logged in (in a real app, this would check localStorage or a server)
+            const savedUser = localStorage.getItem('quizUser');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Show the current screen
+            showScreen(state.currentScreen);
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const screen = link.getAttribute('data-screen');
+                    showScreen(screen);
+                    
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            // Authentication
+            loginBtn.addEventListener('click', () => showScreen('login'));
+            signupBtn.addEventListener('click', () => showScreen('signup'));
+            logoutBtn.addEventListener('click', handleLogout);
+            goToSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                showScreen('signup');
+            });
+            goToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                showScreen('login');
+            });
+
+            // Forms
+            loginForm.addEventListener('submit', handleLogin);
+            signupForm.addEventListener('submit', handleSignup);
+
+            // Quiz setup
+            getStartedBtn.addEventListener('click', () => {
+                if (state.currentUser) {
+                    showScreen('quiz-setup');
+                } else {
+                    showScreen('login');
+                }
+            });
+
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    categoryCards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    state.currentQuiz.category = card.getAttribute('data-category');
+                });
+            });
+
+            difficultyOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    difficultyOptions.forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    state.currentQuiz.difficulty = option.getAttribute('data-difficulty');
+                });
+            });
+
+            startQuizBtn.addEventListener('click', startQuiz);
+
+            // Quiz controls
+            nextQuestionBtn.addEventListener('click', nextQuestion);
+            prevQuestionBtn.addEventListener('click', previousQuestion);
+            submitQuizBtn.addEventListener('click', submitQuiz);
+
+            // Results screen
+            newQuizBtn.addEventListener('click', () => showScreen('quiz-setup'));
+            reviewAnswersBtn.addEventListener('click', reviewAnswers);
+            leaderboardBtn.addEventListener('click', () => showScreen('leaderboard'));
+        }
+
+        // Show a specific screen
+        function showScreen(screenName) {
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(`${screenName}-screen`).classList.add('active');
+            state.currentScreen = screenName;
+
+            // Update navigation
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-screen') === screenName) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // Update UI based on authentication state
+        function updateAuthUI() {
+            if (state.currentUser) {
+                authButtons.style.display = 'none';
+                userProfile.style.display = 'flex';
+                document.getElementById('user-avatar').textContent = 
+                    state.currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('username').textContent = state.currentUser.name;
+            } else {
+                authButtons.style.display = 'flex';
+                userProfile.style.display = 'none';
+            }
+        }
+
+        // Handle user login
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // In a real app, this would be an API call
+            if (email && password) {
+                state.currentUser = {
+                    name: "John Doe",
+                    email: email
+                };
+                localStorage.setItem('quizUser', JSON.stringify(state.currentUser));
+                updateAuthUI();
+                showScreen('home');
+                
+                // Show success message
+                alert('Login successful!');
+            } else {
+                alert('Please enter both email and password.');
+            }
+        }
+
+        // Handle user signup
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+
+            if (password !== confirm) {
+                alert('Passwords do not match.');
+                return;
+            }
+
+            // In a real app, this would be an API call
+            if (name && email && password) {
+                state.currentUser = {
+                    name: name,
+                    email: email
+                };
+                localStorage.setItem('quizUser', JSON.stringify(state.currentUser));
+                updateAuthUI();
+                showScreen('home');
+                
+                // Show success message
+                alert('Account created successfully!');
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Handle user logout
+        function handleLogout() {
+            state.currentUser = null;
+            localStorage.removeItem('quizUser');
+            updateAuthUI();
+            showScreen('home');
+        }
+
+        // Start a new quiz
+        function startQuiz() {
+            const questionCount = parseInt(document.getElementById('question-count').value);
+            
+            // Get questions based on category and difficulty
+            const questions = quizData[state.currentQuiz.category][state.currentQuiz.difficulty];
+            
+            // If we don't have enough questions, duplicate some (in a real app, you'd have more questions)
+            state.currentQuiz.questions = [];
+            for (let i = 0; i < questionCount; i++) {
+                state.currentQuiz.questions.push(questions[i % questions.length]);
+            }
+            
+            // Shuffle questions and options
+            state.currentQuiz.questions = shuffleArray(state.currentQuiz.questions);
+            state.currentQuiz.questions.forEach(q => {
+                q.options = shuffleArray(q.options);
+                // Update correct index after shuffling
+                q.correct = q.options.indexOf(questions.find(original => 
+                    original.question === q.question).options[q.correct]);
+            });
+            
+            // Reset quiz state
+            state.currentQuiz.currentQuestionIndex = 0;
+            state.currentQuiz.userAnswers = new Array(questionCount).fill(null);
+            state.currentQuiz.score = 0;
+            state.currentQuiz.timeLeft = 300; // 5 minutes
+            
+            // Start timer
+            startTimer();
+            
+            // Show quiz screen
+            showScreen('quiz');
+            displayQuestion();
+        }
+
+        // Display the current question
+        function displayQuestion() {
+            const question = state.currentQuiz.questions[state.currentQuiz.currentQuestionIndex];
+            const questionCounter = document.getElementById('question-counter');
+            const scoreCounter = document.getElementById('score-counter');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const progressBar = document.getElementById('quiz-progress');
+            
+            // Update counters
+            questionCounter.textContent = `Question ${state.currentQuiz.currentQuestionIndex + 1} of ${state.currentQuiz.questions.length}`;
+            scoreCounter.textContent = `Score: ${state.currentQuiz.score}`;
+            
+            // Update progress bar
+            const progress = ((state.currentQuiz.currentQuestionIndex + 1) / state.currentQuiz.questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Display question
+            questionText.textContent = question.question;
+            
+            // Display options
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (state.currentQuiz.userAnswers[state.currentQuiz.currentQuestionIndex] === index) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.innerHTML = `
+                    <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            prevQuestionBtn.style.display = state.currentQuiz.currentQuestionIndex > 0 ? 'inline-flex' : 'none';
+            nextQuestionBtn.style.display = state.currentQuiz.currentQuestionIndex < state.currentQuiz.questions.length - 1 ? 'inline-flex' : 'none';
+            submitQuizBtn.style.display = state.currentQuiz.currentQuestionIndex === state.currentQuiz.questions.length - 1 ? 'inline-flex' : 'none';
+        }
+
+        // Select an option for the current question
+        function selectOption(optionIndex) {
+            // Deselect all options
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select the clicked option
+            document.querySelectorAll('.option')[optionIndex].classList.add('selected');
+            
+            // Save the answer
+            state.currentQuiz.userAnswers[state.currentQuiz.currentQuestionIndex] = optionIndex;
+            
+            // Check if answer is correct and update score
+            const question = state.currentQuiz.questions[state.currentQuiz.currentQuestionIndex];
+            if (optionIndex === question.correct) {
+                // Only add to score if this question wasn't already answered correctly
+                if (state.currentQuiz.userAnswers[state.currentQuiz.currentQuestionIndex] !== question.correct) {
+                    state.currentQuiz.score++;
+                }
+            } else {
+                // If changing from correct to incorrect, decrease score
+                if (state.currentQuiz.userAnswers[state.currentQuiz.currentQuestionIndex] === question.correct) {
+                    state.currentQuiz.score--;
+                }
+            }
+            
+            // Update score display
+            document.getElementById('score-counter').textContent = `Score: ${state.currentQuiz.score}`;
+        }
+
+        // Move to the next question
+        function nextQuestion() {
+            if (state.currentQuiz.currentQuestionIndex < state.currentQuiz.questions.length - 1) {
+                state.currentQuiz.currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        // Move to the previous question
+        function previousQuestion() {
+            if (state.currentQuiz.currentQuestionIndex > 0) {
+                state.currentQuiz.currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Start the quiz timer
+        function startTimer() {
+            updateTimerDisplay();
+            
+            state.currentQuiz.timer = setInterval(() => {
+                state.currentQuiz.timeLeft--;
+                updateTimerDisplay();
+                
+                if (state.currentQuiz.timeLeft <= 0) {
+                    clearInterval(state.currentQuiz.timer);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // Update the timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(state.currentQuiz.timeLeft / 60);
+            const seconds = state.currentQuiz.timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Submit the quiz and show results
+        function submitQuiz() {
+            clearInterval(state.currentQuiz.timer);
+            
+            // Calculate final score
+            let correctAnswers = 0;
+            state.currentQuiz.questions.forEach((question, index) => {
+                if (state.currentQuiz.userAnswers[index] === question.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            state.currentQuiz.score = correctAnswers;
+            
+            // Display results
+            document.getElementById('final-score').textContent = 
+                `${correctAnswers}/${state.currentQuiz.questions.length}`;
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            document.getElementById('wrong-answers').textContent = 
+                state.currentQuiz.questions.length - correctAnswers;
+            document.getElementById('percentage-score').textContent = 
+                `${Math.round((correctAnswers / state.currentQuiz.questions.length) * 100)}%`;
+            
+            // Calculate time taken
+            const timeTaken = 300 - state.currentQuiz.timeLeft;
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            document.getElementById('time-taken').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            showScreen('results');
+        }
+
+        // Review answers after quiz completion
+        function reviewAnswers() {
+            // This would show a detailed review of all questions and answers
+            alert('Answer review feature would be implemented here!');
+        }
+
+        // Utility function to shuffle an array
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Initialize the application when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
