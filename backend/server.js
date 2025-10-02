@@ -287,13 +287,40 @@ const authenticateToken = (req, res, next) => {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        message: 'Server is running',
-        timestamp: new Date().toISOString()
-    });
+    try {
+        // Test database connection
+        const dbStatus = db.prepare('SELECT 1 as test').get();
+        res.json({ 
+            status: 'OK', 
+            database: 'Connected',
+            tables: getTableCounts(),
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.json({ 
+            status: 'Error', 
+            database: 'Disconnected',
+            error: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
 });
 
+function getTableCounts() {
+    const tables = ['users', 'questions', 'quiz_results', 'leaderboard'];
+    const counts = {};
+    
+    tables.forEach(table => {
+        try {
+            const count = db.prepare(`SELECT COUNT(*) as count FROM ${table}`).get().count;
+            counts[table] = count;
+        } catch (error) {
+            counts[table] = 'Table does not exist';
+        }
+    });
+    
+    return counts;
+}
 // User Registration
 app.post('/api/register', async (req, res) => {
     const { name, email, password } = req.body;
